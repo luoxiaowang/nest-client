@@ -1,21 +1,59 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div class="app-container">
+      <SideMenu />
+      <div class="app-content">
+        <TopMenu />
+        <div class="box">
+          <router-view/>
+        </div>
+      </div>
     </div>
-    <router-view/>
   </div>
 </template>
 
+<script>
+  import SideMenu from '@/components/layout/SideMenu'
+  import TopMenu from '@/components/layout/TopMenu'
+  export default {
+    name: 'App',
+    components: {
+      SideMenu,
+      TopMenu,
+    }
+  }
+</script>
+
 <style>
+body {
+  margin: 0px
+}
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Monospaced Number", "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  font-size: 14px;
   color: #2c3e50;
 }
+
+.app-container {
+  display: flex;
+}
+
+.app-content {
+  flex: 1;
+  background: #f3f7fc;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content .box {
+  flex: 1;
+  overflow-y: auto;
+  width: calc(100vw - 202px);
+}
+
 #nav {
   padding: 30px;
 }
