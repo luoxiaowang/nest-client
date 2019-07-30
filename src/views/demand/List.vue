@@ -2,7 +2,7 @@
  * @Author: luoxiao
  * @Date: 2019-07-27 15:15:32
  * @LastEditors: luoxiao
- * @LastEditTime: 2019-07-27 17:19:01
+ * @LastEditTime: 2019-07-30 22:30:38
  * @Description: file content
  -->
 
@@ -14,12 +14,13 @@
           <el-input placeholder="需求名称" v-model="formData.name"></el-input>
         </el-col>
         <el-col :span="8">
-          <el-input placeholder="测试主R" v-model="formData.testPerson"></el-input>
+          <el-input placeholder="测试主R" v-model="formData.testR"></el-input>
         </el-col>
         <el-col :span="8">
           <el-date-picker
-            v-model="formData.createDate"
+            v-model="formData.actualDate"
             type="daterange"
+            value-format="yyyy-MM-dd"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期">
@@ -27,8 +28,8 @@
         </el-col>
       </el-row>
       <div class="btn-box">
-        <el-button type="primary"><i class="el-icon-search" /> 查询</el-button>
-        <el-button><i class="el-icon-refresh" /> 重置</el-button>
+        <el-button type="primary" @click="handleSearch(1)"><i class="el-icon-search" /> 查询</el-button>
+        <el-button @click="resetForm"><i class="el-icon-refresh" /> 重置</el-button>
         <el-button type="warning"><i class="el-icon-download" /> 导出</el-button>
         <el-button type="success" @click="showDialog"><i class="el-icon-plus" /> 新建需求</el-button>
       </div>
@@ -36,61 +37,64 @@
     <div class="table-content">
       <el-table
         :data="tableData"
+        v-loading="loading"
         border
         style="width: 100%">
         <el-table-column
-          prop="date"
+          prop="name"
           label="需求名称"
           width="200">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="demandR"
           label="需求主R"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="developR"
           label="开发主R"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="testR"
           label="测试主R"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="planDate"
           label="计划提测日期"
           width="200">
         </el-table-column>
         <el-table-column
-          prop="province"
+          prop="actualDate"
           label="实际提测日期"
           width="200">
         </el-table-column>
         <el-table-column
-          prop="city"
+          prop="developPd"
           label="开发估时"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="testPd"
           label="测试估时"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="zip"
+          prop="testPw"
           label="测试人效"
           width="120">
         </el-table-column>
         <el-table-column
           fixed="right"
-          label="操作"
-          width="100">
-          <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
-          </template>
+          width="120"
+          label="操作">
+            <template slot-scope="scope">
+              <div class="btn-wrap">
+                <el-button type="text" size="small" @click="handleModify(scope.row)"><i class="el-icon-edit"></i> 编辑</el-button>
+                <el-button type="text" size="small" @click="handleDelete(scope.row)"><i class="el-icon-delete"></i> 删除</el-button>
+              </div>
+            </template>
         </el-table-column>
       </el-table>
       <div class="pageBox">
@@ -98,71 +102,151 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          :page-sizes="[10, 15, 20, 30]"
+          :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400">
+          :total="total">
         </el-pagination>
       </div>
     </div>
     <DemandDialog
       :dialogFormVisible="dialogFormVisible"
+      :currentId="currentId"
       @hideDialog="hideDialog"
+      @handleSearch="handleSearch"
     />
   </div>
 </template>
 
 <script>
   import DemandDialog from './components/DemandDialog'
+  import { api } from '@/common/api'
 
   export default {
     name: 'DemandList',
     data() {
       return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '上海市普陀区金沙江路 1518 弄',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '上海市普陀区金沙江路 1518 弄',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市',
-          zip: 200333
-        }],
-        formData: {
-          name: '',
-          testPerson: '',
-          createDate: ''
-        },
+        tableData: [],
+        formData: this.initForm(),
         currentPage: 1,
+        pageSize: 10,
+        total: 0,
         dialogFormVisible: false,
+        loading: false,
+        currentId: '',
       };
     },
     components: {
       DemandDialog,
     },
     methods: {
+      initForm() {
+        return {
+          name: '',
+          testR: '',
+          actualDate: '',
+        }
+      },
+
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageSize = val
+        this.currentPage = 1
+        this.handleSearch()
       },
+
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.currentPage = val
+        this.handleSearch()
       },
+
       showDialog() {
         this.dialogFormVisible = true
       },
+
       hideDialog() {
-        console.log('dddddd')
         this.dialogFormVisible = false
+        this.currentId = null
       },
-      handleClick() {
+
+      resetForm() {
+        this.formData = this.initForm()
+        this.currentPage = 1
+        this.handleSearch()
       },
-    }
+
+      handleSearch(currentPage) {
+        if (currentPage) {
+          this.currentPage = currentPage
+        }
+        this.loading = true;
+        const { name, testR, actualDate} = this.formData
+        const ajaxData = {
+          name,
+          testR,
+          startDate: actualDate[0],
+          endDate: actualDate[1],
+          pageSize: this.pageSize,
+          currentPage: this.currentPage
+        }
+        api.get('/api/demand', {
+          params: ajaxData,
+        })
+        .then((res) => {
+          this.loading = false;
+          this.total = res.total;
+          this.tableData = res.data || [];
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+      },
+
+      handleModify(item) {
+        this.showDialog(true)
+        this.currentId = item._id
+      },
+
+      handleDelete(item) {
+        this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deleteData(item)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+
+      deleteData(item) {
+        api.get('/api/demand/delete', {
+          params: {
+            id: item._id
+          },
+        })
+        .then((res) => {
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 500,
+          });
+          this.handleSearch()
+        })
+        .catch(() => {
+          this.$notify.error({
+            title: '错误',
+            message: '删除失败'
+          });
+        });
+      }
+    },
+    created() {
+      this.handleSearch()
+    },
   }
 </script>
 
@@ -181,6 +265,8 @@
       background-color white
       border-radius 8px
       margin-top 25px
+      .btn-wrap
+        width 200px
       .pageBox
         padding 15px
         text-align right

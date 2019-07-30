@@ -1,43 +1,248 @@
 <template>
-  <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-    <el-form :model="form">
-      <el-form-item label="活动名称" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="活动区域" :label-width="formLabelWidth">
-        <el-select v-model="form.region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
+  <el-dialog
+    v-loading="loading"
+    title="新建需求"
+    @opened="handleQuery"
+    :visible.sync="dialogFormVisible"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="false"
+    width="80%"
+  >
+    <el-form :model="demandForm" ref="demandForm">
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item
+            label="需求名称"
+            prop="name"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入需求名称', trigger: 'change'},
+            ]"
+          >
+            <el-input v-model="demandForm.name"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="需求主R"
+            prop="demandR"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入需求主R姓名', trigger: 'change'},
+            ]"
+          >
+            <el-input v-model="demandForm.demandR"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="开发主R"
+            prop="developR"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入开发主R姓名', trigger: 'change'},
+            ]"
+          >
+            <el-input v-model="demandForm.developR"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="测试主R"
+            prop="testR"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入测试主R姓名', trigger: 'change'},
+            ]"
+          >
+            <el-input v-model="demandForm.testR"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="计划提测时间"
+            prop="planDate"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入计划提测时间', trigger: 'change'},
+            ]"
+          >
+            <el-date-picker
+              v-model="demandForm.planDate"
+              type="date"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="实际提测时间"
+            prop="actualDate"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入实际提测时间', trigger: 'change'},
+            ]"
+          >
+            <el-date-picker
+              v-model="demandForm.actualDate"
+              type="date"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="开发估时"
+            prop="developPd"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入开发估时', trigger: 'change'},
+            ]"
+          >
+            <el-input-number controls-position="right" :step="0.1" :min="0.1" v-model="demandForm.developPd"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="测试估时"
+            prop="testPd"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入测试估时', trigger: 'change'},
+            ]"
+          >
+            <el-input-number controls-position="right" :step="0.1" :min="0.1" v-model="demandForm.testPd"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="测试人效"
+            prop="testPw"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入测试人效', trigger: 'change'},
+            ]"
+          >
+            <el-input-number controls-position="right"  :step="0.1" :min="0.1" v-model="demandForm.testPw"></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="hideDialog">取 消</el-button>
-      <el-button type="primary" @click="hideDialog">确 定</el-button>
+      <el-button type="primary" @click="handleSubmit('demandForm')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
+  import { api } from '@/common/api'
   export default {
     name: 'DemandDialog',
     data() {
       return {
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        formLabelWidth: '120px'
+        demandForm: this.initFrom(),
+        formLabelWidth: '120px',
+        loading: false
       };
     },
     methods: {
+      initFrom() {
+        return {
+          name: '',
+          demandR: '',
+          developR: '',
+          testR: '',
+          planDate: '',
+          actualDate: '',
+          developPd: '',
+          testPd: '',
+          testPw: ''
+        }
+      },
+      handleSubmit(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.submitForm()
+          } else {
+            return false;
+          }
+        });
+      },
+
+      handleQuery() {
+        if (!this.currentId) return false
+        api.get('/api/demand/queryById', {
+          params: {
+            id: this.currentId,
+          },
+        }).then((res) => {
+          this.demandForm = res.data || {};
+        })
+      },
+
+      submitForm() {
+        this.loading = true;
+        let statusTxt = '新建'
+        let submitUrl = '/api/demand/create'
+        if (this.currentId) {
+          statusTxt = '修改'
+          submitUrl = '/api/demand/update'
+        }
+        api.post(submitUrl, this.demandForm)
+        .then(() => {
+          this.loading = false;
+          this.resetForm('demandForm')
+          this.$notify({
+            title: '成功',
+            message: `${statusTxt}成功`,
+            type: 'success',
+            duration: 500,
+          });
+          setTimeout(() => {
+            this.hideDialog()
+            this.$emit('handleSearch')
+          }, 500);
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+      },
+
+      updateForm() {
+        this.loading = true;
+        api.post('/api/demand/create', this.demandForm)
+        .then(() => {
+          this.loading = false;
+          this.resetForm('demandForm')
+          this.$notify({
+            title: '成功',
+            message: '修改成功',
+            type: 'success',
+            duration: 500,
+          });
+          setTimeout(() => {
+            this.hideDialog()
+            this.$emit('handleSearch')
+          }, 500);
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+      },
+
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+
       hideDialog() {
+        this.resetForm('demandForm')
+        this.demandForm = this.initFrom()
         this.$emit('hideDialog')
       }
     },
@@ -45,11 +250,15 @@
       dialogFormVisible: {
         type: Boolean,
         default: false
-      }
+      },
+      currentId: String
     }
   }
 </script>
 
 <style lang="stylus" scoped>
-
+  .el-date-editor.el-input
+    width 100%
+  .el-input-number
+    width 100%
 </style>
