@@ -97,7 +97,7 @@
         </el-table-column>
         <el-table-column
           fixed="right"
-          width="120"
+          width="180"
           label="操作">
             <template slot-scope="scope">
               <div class="btn-wrap">
