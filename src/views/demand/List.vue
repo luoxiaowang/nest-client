@@ -31,7 +31,7 @@
         <el-button type="primary" @click="handleSearch(1)"><i class="el-icon-search" /> 查询</el-button>
         <el-button @click="resetForm"><i class="el-icon-refresh" /> 重置</el-button>
         <el-button type="warning"><i class="el-icon-download" /> 导出</el-button>
-        <el-button type="success" @click="showDialog"><i class="el-icon-plus" /> 新建需求</el-button>
+        <el-button type="success" @click="handleAdd"><i class="el-icon-plus" /> 新建需求</el-button>
       </div>
     </div>
     <div class="table-content">
@@ -71,6 +71,16 @@
           width="200">
         </el-table-column>
         <el-table-column
+          prop="planOnlineDate"
+          label="计划上线日期"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          prop="actualOnlineDate"
+          label="实际上线日期"
+          width="200">
+        </el-table-column>
+        <el-table-column
           prop="developPd"
           label="开发估时"
           width="120">
@@ -91,6 +101,7 @@
           label="操作">
             <template slot-scope="scope">
               <div class="btn-wrap">
+                <el-button type="text" size="small" @click="handleCopy(scope.row)"><i class="el-icon-document-copy"></i> 复制</el-button>
                 <el-button type="text" size="small" @click="handleModify(scope.row)"><i class="el-icon-edit"></i> 编辑</el-button>
                 <el-button type="text" size="small" @click="handleDelete(scope.row)"><i class="el-icon-delete"></i> 删除</el-button>
               </div>
@@ -112,6 +123,8 @@
     <DemandDialog
       :dialogFormVisible="dialogFormVisible"
       :currentId="currentId"
+      :title="dialogTitle"
+      :type="dialogType"
       @hideDialog="hideDialog"
       @handleSearch="handleSearch"
     />
@@ -134,6 +147,8 @@
         dialogFormVisible: false,
         loading: false,
         currentId: '',
+        dialogTitle: '新建需求',
+        dialogType: 'add',
       };
     },
     components: {
@@ -201,9 +216,24 @@
         });
       },
 
-      handleModify(item) {
-        this.showDialog(true)
+      handleAdd() {
+        this.dialogTitle = '新增需求'
+        this.dialogType = 'add'
+        this.showDialog()
+      },
+
+      handleCopy(item) {
+        this.dialogTitle = '新增需求'
         this.currentId = item._id
+        this.dialogType = 'copy'
+        this.showDialog()
+      },
+
+      handleModify(item) {
+        this.dialogTitle = '编辑需求'
+        this.currentId = item._id
+        this.dialogType = 'modify'
+        this.showDialog()
       },
 
       handleDelete(item) {

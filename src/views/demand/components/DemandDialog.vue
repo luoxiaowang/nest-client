@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-loading="loading"
-    title="新建需求"
+    :title="title"
     @opened="handleQuery"
     :visible.sync="dialogFormVisible"
     :close-on-click-modal="false"
@@ -97,6 +97,42 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
+            label="计划上线日期"
+            prop="planOnlineDate"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入计划上线日期', trigger: 'change'},
+            ]"
+          >
+            <el-date-picker
+              v-model="demandForm.planOnlineDate"
+              type="date"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="实际上线日期"
+            prop="actualOnlineDate"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入实际上线日期', trigger: 'change'},
+            ]"
+          >
+            <el-date-picker
+              v-model="demandForm.actualOnlineDate"
+              type="date"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
             label="开发估时"
             prop="developPd"
             :label-width="formLabelWidth"
@@ -165,6 +201,7 @@
           testPw: ''
         }
       },
+
       handleSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -183,6 +220,7 @@
           },
         }).then((res) => {
           this.demandForm = res.data || {};
+          console.log(this.demandForm)
         })
       },
 
@@ -190,9 +228,13 @@
         this.loading = true;
         let statusTxt = '新建'
         let submitUrl = '/api/demand/create'
-        if (this.currentId) {
+        if (this.currentId && this.type === 'modify') {
           statusTxt = '修改'
           submitUrl = '/api/demand/update'
+        }
+        console.log(this.type)
+        if (this.type === 'copy') {
+          delete this.demandForm._id
         }
         api.post(submitUrl, this.demandForm)
         .then(() => {
@@ -214,36 +256,14 @@
         });
       },
 
-      updateForm() {
-        this.loading = true;
-        api.post('/api/demand/create', this.demandForm)
-        .then(() => {
-          this.loading = false;
-          this.resetForm('demandForm')
-          this.$notify({
-            title: '成功',
-            message: '修改成功',
-            type: 'success',
-            duration: 500,
-          });
-          setTimeout(() => {
-            this.hideDialog()
-            this.$emit('handleSearch')
-          }, 500);
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-      },
-
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
 
       hideDialog() {
+        this.$emit('hideDialog')
         this.resetForm('demandForm')
         this.demandForm = this.initFrom()
-        this.$emit('hideDialog')
       }
     },
     props: {
@@ -251,7 +271,9 @@
         type: Boolean,
         default: false
       },
-      currentId: String
+      currentId: String,
+      title: String,
+      type: String
     }
   }
 </script>
