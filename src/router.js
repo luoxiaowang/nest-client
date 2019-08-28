@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 
 const DemandList = () => import('./views/demand/List.vue')
+const FaultList = () => import('./views/fault/List.vue')
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/demand',
       name: 'demand',
       component: DemandList
+    },
+    {
+      path: '/fault',
+      name: 'fault',
+      component: FaultList
     }
   ]
 })
