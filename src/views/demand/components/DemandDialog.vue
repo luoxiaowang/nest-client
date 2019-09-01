@@ -25,6 +25,15 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
+            label="需求链接"
+            prop="link"
+            :label-width="formLabelWidth"
+          >
+            <el-input v-model="demandForm.link"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
             label="需求主R"
             prop="demandR"
             :label-width="formLabelWidth"
@@ -191,6 +200,7 @@
       initFrom() {
         return {
           name: '',
+          link: '',
           demandR: '',
           developR: '',
           testR: '',

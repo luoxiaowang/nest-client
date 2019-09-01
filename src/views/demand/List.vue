@@ -41,9 +41,12 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="name"
           label="需求名称"
           width="200">
+          <template slot-scope="scope">
+            <a target="_blank" class="demand-link" v-if="scope.row.link" :href="scope.row.link">{{scope.row.name}}</a>
+            <span v-else>{{scope.row.name}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="demandR"
@@ -295,6 +298,9 @@
       background-color white
       border-radius 8px
       margin-top 25px
+      .demand-link
+        color #409EFF
+        text-decoration none
       .btn-wrap
         width 200px
       .pageBox
