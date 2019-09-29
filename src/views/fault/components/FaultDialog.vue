@@ -37,6 +37,15 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
+            label="故障链接"
+            prop="link"
+            :label-width="formLabelWidth"
+          >
+            <el-input v-model="faultForm.link"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
             label="故障描述"
             prop="desc"
             :label-width="formLabelWidth"
@@ -132,6 +141,7 @@
         return {
           sysName: '',
           title: '',
+          link: '',
           desc: '',
           dutyR: '',
           dealR: '',

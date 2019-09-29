@@ -43,9 +43,12 @@
           width="200">
         </el-table-column>
         <el-table-column
-          prop="title"
           label="故障标题"
           width="200">
+          <template slot-scope="scope">
+            <a target="_blank" class="fault-link" v-if="scope.row.link" :href="scope.row.link">{{scope.row.title}}</a>
+            <span v-else>{{scope.row.title}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="desc"
@@ -270,6 +273,9 @@
       background-color white
       border-radius 8px
       margin-top 25px
+      .fault-link
+        color #409EFF
+        text-decoration none
       .btn-wrap
         width 200px
       .pageBox
