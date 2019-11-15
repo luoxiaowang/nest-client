@@ -94,9 +94,14 @@
           width="120">
         </el-table-column>
         <el-table-column
-          prop="testPw"
-          label="测试人效"
+          prop="subDemand"
+          label="子需求数"
           width="120">
+        </el-table-column>
+        <el-table-column
+          prop="remark"
+          label="备注"
+          width="240">
         </el-table-column>
         <el-table-column
           fixed="right"

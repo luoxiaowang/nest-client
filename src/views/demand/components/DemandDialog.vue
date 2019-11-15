@@ -166,14 +166,28 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
-            label="测试人效"
-            prop="testPw"
+            label="子需求数"
+            prop="subDemand"
             :label-width="formLabelWidth"
             :rules="[
-              { required: true, message: '请输入测试人效', trigger: 'change'},
+              { required: true, message: '请输入子需求数', trigger: 'change'},
             ]"
           >
-            <el-input-number controls-position="right"  :step="0.1" :min="0.1" v-model="demandForm.testPw"></el-input-number>
+            <el-input-number controls-position="right"  :step="0.1" :min="0.1" v-model="demandForm.subDemand"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item
+            label="备注"
+            prop="remark"
+            :label-width="formLabelWidth"
+          >
+            <el-input
+              type="textarea"
+              :autosize="{minRows: 4, maxRows: 6}"
+              placeholder="请输入备注"
+              v-model="demandForm.remark">
+            </el-input>
           </el-form-item>
         </el-col>
       </el-row>
