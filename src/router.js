@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 
 const DemandList = () => import('./views/demand/List.vue')
 const FaultList = () => import('./views/fault/List.vue')
+const ScheduleCal = () => import('./views/schedule/Detail.vue')
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/fault',
       name: 'fault',
       component: FaultList
-    }
+    },
+    {
+      path: '/schedule',
+      name: 'schedule',
+      component: ScheduleCal
+    },
   ]
 })

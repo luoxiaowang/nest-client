@@ -222,7 +222,8 @@
           actualDate: '',
           developPd: '',
           testPd: '',
-          testPw: ''
+          subDemand: '',
+          remark: '',
         }
       },
 

@@ -39,6 +39,10 @@
           <i class="el-icon-s-order"></i>
           <span>线上故障系统</span>
         </el-menu-item>
+        <el-menu-item index="1-4" route="schedule">
+          <i class="el-icon-s-order"></i>
+          <span>任务排期</span>
+        </el-menu-item>
       </el-submenu>
       <el-menu-item index="2" route="about">
         <i class="el-icon-location"></i>
