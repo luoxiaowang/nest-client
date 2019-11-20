@@ -5,7 +5,7 @@
         slot="dateCell"
         slot-scope="{date, data}">
         <p :class="data.isSelected ? 'is-selected' : ''">
-          <span>{{ data.day.split('-').slice(1).join('-') }} {{ data.isSelected ? '✔️' : ''}}</span>
+          <span class="dataNum">{{ data.day.split('-').slice(1).join('-') }} {{ data.isSelected ? '✔️' : ''}}</span>
           <div class="operate" v-if="data.isSelected">
             <el-button type="primary" size="mini" round @click="handleAdd(data)">排期</el-button>
           </div>
@@ -103,6 +103,9 @@
 
 <style lang="stylus" scoped>
   .schedule-container
+    .dataNum
+      font-size 16px
+      font-weight bold
     >>>.el-calendar-table
       .current
         &:hover

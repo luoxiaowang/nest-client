@@ -81,19 +81,24 @@
           ...this.scheduleForm,
         }
         api.post(submitUrl, formData)
-        .then(() => {
+        .then(data => {
           this.loading = false;
-          this.resetForm('scheduleForm')
-          this.$notify({
-            title: '成功',
-            message: `${statusTxt}成功`,
-            type: 'success',
-            duration: 500,
-          });
-          setTimeout(() => {
-            this.hideDialog()
-            this.$emit('handleSearch')
-          }, 500);
+          if (data.code === 200) {
+            this.resetForm('scheduleForm')
+            this.$notify({
+              title: '成功',
+              message: `${statusTxt}成功`,
+              type: 'success',
+              duration: 500,
+            });
+            setTimeout(() => {
+              this.hideDialog()
+              this.$emit('handleSearch')
+            }, 500);
+          } else {
+            const schedule = data.data[0]
+            this.$alert(`当前日期下【${schedule.planR}】已有排期任务：${schedule.name}`, '排期冲突')
+          }
         })
         .catch(() => {
           this.loading = false;

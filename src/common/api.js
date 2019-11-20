@@ -31,15 +31,7 @@ const api = require('axios').create({
 api.interceptors.response.use((resp) => {
   if (resp.config.passInterceptor) return resp;
   if (isObject(resp.data) && resp.data.code != null) {
-    if (resp.data.code === 200) {
-      return resp.data;
-    } else {
-      this.$notify({
-        title: '提示',
-        message: '服务端异常，请重新再试！',
-        type: 'warning',
-      });
-    }
+    return resp.data;
   } else {
     this.$notify({
       title: '提示',
