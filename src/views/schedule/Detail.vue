@@ -1,6 +1,6 @@
 <template>
   <div class="schedule-container">
-    <el-calendar ref="scheduleCal">
+    <el-calendar ref="scheduleCal" v-model="value">
       <template
         slot="dateCell"
         slot-scope="{date, data}">
@@ -38,6 +38,7 @@
       return {
         dialogFormVisible: false,
         current: '',
+        value: new Date(),
         data: [],
       }
     },
@@ -46,6 +47,13 @@
     },
     computed: {
 
+    },
+    watch: {
+      value(cur, old) {
+        if ((cur.getMonth() + 1) !== (old.getMonth() + 1)) {
+          this.handleSearch(`${cur.getFullYear()}-${cur.getMonth() + 1}`)
+        }
+      }
     },
     methods: {
       showDialog() {
@@ -56,8 +64,11 @@
         this.dialogFormVisible = false
       },
 
-      handleSearch() {
-        const currentFirstMonth = this.$refs.scheduleCal && this.$refs.scheduleCal.curMonthDatePrefix
+      handleSearch(current) {
+        let currentFirstMonth = current
+        if (!current) {
+          currentFirstMonth = this.$refs.scheduleCal && this.$refs.scheduleCal.curMonthDatePrefix
+        }
         const currentYear = currentFirstMonth.split('-')[0]
         const currentMonth = currentFirstMonth.split('-')[1]
         const countDays = this.mGetDate(currentYear, currentMonth)
