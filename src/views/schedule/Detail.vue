@@ -70,12 +70,13 @@
           currentFirstMonth = this.$refs.scheduleCal && this.$refs.scheduleCal.curMonthDatePrefix
         }
         const currentYear = currentFirstMonth.split('-')[0]
-        const currentMonth = currentFirstMonth.split('-')[1]
+        let currentMonth = currentFirstMonth.split('-')[1]
+        if (currentMonth < 10) currentMonth = '0' + currentMonth
         const countDays = this.mGetDate(currentYear, currentMonth)
         this.loading = true;
         const ajaxData = {
-          startDate: `${currentFirstMonth}-01`,
-          endDate: `${currentFirstMonth}-${countDays}`
+          startDate: `${currentYear}-${currentMonth}-01`,
+          endDate: `${currentYear}-${currentMonth}-${countDays}`
         }
         api.get('/api/schedule', {
           params: ajaxData,
