@@ -71,7 +71,7 @@
         }
         const currentYear = currentFirstMonth.split('-')[0]
         let currentMonth = currentFirstMonth.split('-')[1]
-        if (currentMonth < 10) currentMonth = '0' + currentMonth
+        if (currentMonth < 10 && currentMonth[0] !== '0') currentMonth = '0' + currentMonth
         const countDays = this.mGetDate(currentYear, currentMonth)
         this.loading = true;
         const ajaxData = {
