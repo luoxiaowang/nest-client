@@ -14,15 +14,15 @@
           <el-input placeholder="需求名称" v-model="formData.name"></el-input>
         </el-col>
         <el-col :span="8">
-          <el-input placeholder="测试主R" v-model="formData.testR"></el-input>
+          <el-input placeholder="测试人员" v-model="formData.testR"></el-input>
         </el-col>
         <el-col :span="8">
           <el-date-picker
-            v-model="formData.actualDate"
+            v-model="formData.onlineDate"
             type="daterange"
             value-format="yyyy-MM-dd"
             range-separator="至"
-            start-placeholder="开始日期"
+            start-placeholder="上线开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
         </el-col>
@@ -50,52 +50,62 @@
         </el-table-column>
         <el-table-column
           prop="demandR"
-          label="需求主R"
+          label="产品人员"
           width="120">
         </el-table-column>
         <el-table-column
           prop="developR"
-          label="开发主R"
+          label="开发人员"
           width="120">
         </el-table-column>
         <el-table-column
           prop="testR"
-          label="测试主R"
+          label="测试人员"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="planDate"
-          label="计划提测日期"
-          width="200">
-        </el-table-column>
-        <el-table-column
           prop="actualDate"
-          label="实际提测日期"
+          label="提测日期"
           width="200">
         </el-table-column>
         <el-table-column
-          prop="planOnlineDate"
-          label="计划上线日期"
+          prop="uatDate"
+          label="UAT日期"
           width="200">
         </el-table-column>
         <el-table-column
           prop="actualOnlineDate"
-          label="实际上线日期"
+          label="上线日期"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          prop="testPeriod"
+          label="测试时间"
           width="200">
         </el-table-column>
         <el-table-column
           prop="developPd"
-          label="开发估时"
+          label="开发时长"
           width="120">
         </el-table-column>
         <el-table-column
           prop="testPd"
-          label="测试估时"
+          label="测试时长"
           width="120">
         </el-table-column>
         <el-table-column
           prop="subDemand"
           label="子需求数"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="caseCount"
+          label="用例数"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="bugCount"
+          label="Bug数量"
           width="120">
         </el-table-column>
         <el-table-column
@@ -167,7 +177,7 @@
         return {
           name: '',
           testR: '',
-          actualDate: '',
+          onlineDate: '',
         }
       },
 
@@ -202,12 +212,12 @@
           this.currentPage = currentPage
         }
         this.loading = true;
-        const { name, testR, actualDate} = this.formData
+        const { name, testR, onlineDate} = this.formData
         const ajaxData = {
           name,
           testR,
-          startDate: actualDate[0],
-          endDate: actualDate[1],
+          startDate: onlineDate[0],
+          endDate: onlineDate[1],
           pageSize: this.pageSize,
           currentPage: this.currentPage
         }
@@ -217,6 +227,12 @@
         .then((res) => {
           this.loading = false;
           this.total = res.total;
+          res.data.map(item => {
+            if (item.testStartDate) {
+              item.testPeriod = `${item.testStartDate}至${item.testEndDate}`
+            }
+            return item
+          })
           this.tableData = res.data || [];
         })
         .catch(() => {

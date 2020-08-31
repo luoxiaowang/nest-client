@@ -34,11 +34,11 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
-            label="需求主R"
+            label="产品人员"
             prop="demandR"
             :label-width="formLabelWidth"
             :rules="[
-              { required: true, message: '请输入需求主R姓名', trigger: 'change'},
+              { required: true, message: '请输入产品人员姓名', trigger: 'change'},
             ]"
           >
             <el-input v-model="demandForm.demandR"></el-input>
@@ -46,11 +46,11 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
-            label="开发主R"
+            label="开发人员"
             prop="developR"
             :label-width="formLabelWidth"
             :rules="[
-              { required: true, message: '请输入开发主R姓名', trigger: 'change'},
+              { required: true, message: '请输入开发人员姓名', trigger: 'change'},
             ]"
           >
             <el-input v-model="demandForm.developR"></el-input>
@@ -58,11 +58,11 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
-            label="测试主R"
+            label="测试人员"
             prop="testR"
             :label-width="formLabelWidth"
             :rules="[
-              { required: true, message: '请输入测试主R姓名', trigger: 'change'},
+              { required: true, message: '请输入测试人员姓名', trigger: 'change'},
             ]"
           >
             <el-input v-model="demandForm.testR"></el-input>
@@ -70,29 +70,11 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
-            label="计划提测时间"
-            prop="planDate"
-            :label-width="formLabelWidth"
-            :rules="[
-              { required: true, message: '请输入计划提测时间', trigger: 'change'},
-            ]"
-          >
-            <el-date-picker
-              v-model="demandForm.planDate"
-              type="date"
-              format="yyyy 年 MM 月 dd 日"
-              value-format="yyyy-MM-dd"
-              placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item
-            label="实际提测时间"
+            label="提测日期"
             prop="actualDate"
             :label-width="formLabelWidth"
             :rules="[
-              { required: true, message: '请输入实际提测时间', trigger: 'change'},
+              { required: true, message: '请输入提测日期', trigger: 'change'},
             ]"
           >
             <el-date-picker
@@ -106,15 +88,15 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
-            label="计划上线日期"
-            prop="planOnlineDate"
+            label="UAT日期"
+            prop="uatDate"
             :label-width="formLabelWidth"
             :rules="[
-              { required: true, message: '请输入计划上线日期', trigger: 'change'},
+              { required: true, message: '请输入UAT日期', trigger: 'change'},
             ]"
           >
             <el-date-picker
-              v-model="demandForm.planOnlineDate"
+              v-model="demandForm.uatDate"
               type="date"
               format="yyyy 年 MM 月 dd 日"
               value-format="yyyy-MM-dd"
@@ -124,11 +106,11 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
-            label="实际上线日期"
+            label="上线日期"
             prop="actualOnlineDate"
             :label-width="formLabelWidth"
             :rules="[
-              { required: true, message: '请输入实际上线日期', trigger: 'change'},
+              { required: true, message: '请输入上线日期', trigger: 'change'},
             ]"
           >
             <el-date-picker
@@ -142,11 +124,31 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
-            label="开发估时"
+            label="测试时间"
+            prop="testPeriod"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入测试时间', trigger: 'change'},
+            ]"
+          >
+            <el-date-picker
+              v-model="demandForm.testPeriod"
+              type="datetimerange"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="开发时长"
             prop="developPd"
             :label-width="formLabelWidth"
             :rules="[
-              { required: true, message: '请输入开发估时', trigger: 'change'},
+              { required: true, message: '请输入开发时长', trigger: 'change'},
             ]"
           >
             <el-input-number controls-position="right" :step="0.1" :min="0.1" v-model="demandForm.developPd"></el-input-number>
@@ -154,11 +156,11 @@
         </el-col>
         <el-col :span="12">
           <el-form-item
-            label="测试估时"
+            label="测试时长"
             prop="testPd"
             :label-width="formLabelWidth"
             :rules="[
-              { required: true, message: '请输入测试估时', trigger: 'change'},
+              { required: true, message: '请输入测试时长', trigger: 'change'},
             ]"
           >
             <el-input-number controls-position="right" :step="0.1" :min="0.1" v-model="demandForm.testPd"></el-input-number>
@@ -173,7 +175,31 @@
               { required: true, message: '请输入子需求数', trigger: 'change'},
             ]"
           >
-            <el-input-number controls-position="right"  :step="0.1" :min="0.1" v-model="demandForm.subDemand"></el-input-number>
+            <el-input-number controls-position="right"  :step="1" :min="1" v-model="demandForm.subDemand"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="用例数"
+            prop="caseCount"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入用例数', trigger: 'change'},
+            ]"
+          >
+            <el-input-number controls-position="right"  :step="1" :min="0" v-model="demandForm.caseCount"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="Bug数量"
+            prop="bugCount"
+            :label-width="formLabelWidth"
+            :rules="[
+              { required: true, message: '请输入Bug数量', trigger: 'change'},
+            ]"
+          >
+            <el-input-number controls-position="right"  :step="1" :min="0" v-model="demandForm.bugCount"></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -218,11 +244,15 @@
           demandR: '',
           developR: '',
           testR: '',
-          planDate: '',
           actualDate: '',
+          uatDate: '',
+          actualOnlineDate: '',
+          testPeriod: '',
           developPd: '',
           testPd: '',
           subDemand: '',
+          caseCount: '',
+          bugCount: '',
           remark: '',
         }
       },
@@ -245,7 +275,7 @@
           },
         }).then((res) => {
           this.demandForm = res.data || {};
-          console.log(this.demandForm)
+          this.demandForm.testPeriod = [this.demandForm.testStartDate, this.demandForm.testEndDate]
         })
       },
 
@@ -257,11 +287,13 @@
           statusTxt = '修改'
           submitUrl = '/api/demand/update'
         }
-        console.log(this.type)
         if (this.type === 'copy') {
           delete this.demandForm._id
         }
-        api.post(submitUrl, this.demandForm)
+        const payload = this.demandForm
+        payload.testStartDate = payload.testPeriod[0]
+        payload.testEndDate = payload.testPeriod[1]
+        api.post(submitUrl, payload)
         .then(() => {
           this.loading = false;
           this.resetForm('demandForm')
@@ -307,5 +339,7 @@
   .el-date-editor.el-input
     width 100%
   .el-input-number
+    width 100%
+  .el-range-editor.el-input__inner
     width 100%
 </style>
