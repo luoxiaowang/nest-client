@@ -30,7 +30,9 @@
       <div class="btn-box">
         <el-button type="primary" @click="handleSearch(1)"><i class="el-icon-search" /> 查询</el-button>
         <el-button @click="resetForm"><i class="el-icon-refresh" /> 重置</el-button>
-        <el-button type="warning"><i class="el-icon-download" /> 导出</el-button>
+        <download-excel class="export" :fetch="exportRecord" :fields="jsonFields" name="filename.xls">
+          <el-button type="warning"><i class="el-icon-download" /> 导出</el-button>
+        </download-excel>
         <el-button type="success" @click="handleAdd"><i class="el-icon-plus" /> 新建需求</el-button>
       </div>
     </div>
@@ -167,6 +169,22 @@
         currentId: '',
         dialogTitle: '新建需求',
         dialogType: 'add',
+        jsonFields: {
+          '需求名称': 'name',
+          '需求链接': 'link',
+          '产品人员': 'demandR',
+          '开发人员': 'developR',
+          '测试人员': 'testR',
+          '提测日期': 'actualDate',
+          'UAT日期': 'uatDate',
+          '上线日期': 'actualOnlineDate',
+          '测试时间': 'testPeriod',
+          '开发时长': 'developPd',
+          '子需求数': 'subDemand',
+          '用例数': 'caseCount',
+          'Bug数': 'bugCount',
+          '备注': 'remark',
+        },
       };
     },
     components: {
@@ -238,6 +256,26 @@
         .catch(() => {
           this.loading = false;
         });
+      },
+
+      async exportRecord() {
+        const { name, testR, onlineDate} = this.formData
+        const ajaxData = {
+          name,
+          testR,
+          startDate: onlineDate[0],
+          endDate: onlineDate[1],
+        }
+        const res = await api.get('/api/demand', {
+          params: ajaxData,
+        })
+        const result = res.data.map(item => {
+          if (item.testStartDate) {
+            item.testPeriod = `${item.testStartDate}至${item.testEndDate}`
+          }
+          return item
+        })
+        return res.data || [];
       },
 
       handleAdd() {
@@ -313,6 +351,9 @@
       border-radius 8px
       .btn-box
         margin-top 20px
+        .export
+          display inline-block
+          margin 0 10px
       .el-range-editor.el-input__inner
         width 100%
     .table-content

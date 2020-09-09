@@ -3,8 +3,11 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue'
 import router from './router'
+import JsonExcel from 'vue-json-excel'
 
 Vue.use(ElementUI);
+
+Vue.component('downloadExcel', JsonExcel)
 
 Vue.config.productionTip = false
 
