@@ -31,19 +31,23 @@
           <i class="el-icon-s-marketing"></i>
           <span>需求数据收集</span>
         </el-menu-item>
-        <el-menu-item index="1-2" route="analyze">
+        <el-menu-item index="1-2" route="summary">
+          <i class="el-icon-s-order"></i>
+          <span>过程度量统计</span>
+        </el-menu-item>
+        <el-menu-item index="1-3" route="analyze">
           <i class="el-icon-s-order"></i>
           <span>过程度量分析</span>
         </el-menu-item>
-        <el-menu-item index="1-3" route="fault">
+        <el-menu-item index="1-4" route="fault">
           <i class="el-icon-s-order"></i>
           <span>线上故障系统</span>
         </el-menu-item>
-        <el-menu-item index="1-4" route="schedule">
+        <el-menu-item index="1-5" route="schedule">
           <i class="el-icon-s-order"></i>
           <span>任务排期</span>
         </el-menu-item>
-        <el-menu-item index="1-5" route="tools">
+        <el-menu-item index="1-6" route="tools">
           <i class="el-icon-s-order"></i>
           <span>工具集</span>
         </el-menu-item>
