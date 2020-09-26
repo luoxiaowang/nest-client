@@ -49,9 +49,9 @@ body {
 }
 
 .app-content .box {
-  flex: 1;
   overflow-y: auto;
   width: calc(100vw - 202px);
+  height: calc(100vh - 47px);
 }
 
 #nav {

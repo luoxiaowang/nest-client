@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 
 const DemandList = () => import('./views/demand/List.vue')
 const SummaryList = () => import('./views/summary/List.vue')
+const AnalyzeList = () => import('./views/analyze/List.vue')
 const FaultList = () => import('./views/fault/List.vue')
 const ScheduleCal = () => import('./views/schedule/Detail.vue')
 const Tools = () => import('./views/tools/Detail')
@@ -31,6 +32,11 @@ export default new Router({
       path: '/summary',
       name: 'summary',
       component: SummaryList
+    },
+    {
+      path: '/analyze',
+      name: 'analyze',
+      component: AnalyzeList
     },
     {
       path: '/fault',
